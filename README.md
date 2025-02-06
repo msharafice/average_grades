@@ -1,16 +1,23 @@
-# average_grades
+# GPA Calculator with Flutter
 
-A new Flutter project.
+This project is a simple application for calculating GPA using the Flutter framework. The user can enter course information including the course name, grade, and credit hours, and the app will automatically calculate the overall GPA.
 
-## Getting Started
+## Features:
+- Add new rows for entering course information.
+- Calculate the total GPA based on grades and credit hours.
+- Simple and user-friendly design using the Flutter framework.
+- Ability to delete entered rows.
+- Useful error message if required fields are not filled.
 
-This project is a starting point for a Flutter application.
+## How to Use:
+1. Run the application.
+2. For each course, enter the course name, grade, and credit hours.
+3. Click the "Calculate" button to display your total GPA.
 
-A few resources to get you started if this is your first Flutter project:
+## Screenshots:
+![GPA Screenshot](assets/simple.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Technologies:
+- Flutter
+- Dart
+- Firebase (if needed for online storage)
