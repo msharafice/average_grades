@@ -27,6 +27,7 @@ class _GPAHomePageState extends State<GPAHomePage> {
   List<TextEditingController> unitControllers = [TextEditingController()];
 
   double gpa = 0.0;
+  String errorMessage = "نتیجه محاسبه در اینجا نمایش داده میشود"; // متن پیش‌فرض
 
   // لیست FocusNode ها برای هر فیلد
   List<FocusNode> nameFocusNodes = [FocusNode()];
@@ -51,42 +52,31 @@ class _GPAHomePageState extends State<GPAHomePage> {
   void _calculateGPA() {
     double totalWeighted = 0;
     int totalUnits = 0;
+    bool hasEmptyField = false;
 
+    // بررسی اینکه آیا همه فیلدها پر شده‌اند یا خیر
     for (int i = 0; i < nameControllers.length; i++) {
       double? grade = double.tryParse(gradeControllers[i].text);
       int? units = int.tryParse(unitControllers[i].text);
 
-      if (grade != null && units != null) {
-        totalWeighted += grade * units;
-        totalUnits += units;
+      // اگر هیچ کدام از فیلدها وارد نشده باشد
+      if (nameControllers[i].text.isEmpty || grade == null || units == null) {
+        hasEmptyField = true;
+        break;
       }
+
+      totalWeighted += grade * units;
+      totalUnits += units;
     }
 
     setState(() {
-      gpa = totalUnits == 0 ? 0.0 : totalWeighted / totalUnits;
-    });
-  }
-
-  // این تابع فوکوس را فقط روی فیلدی که کاربر در حال تعامل است قرار می‌دهد
-  void _setFocus(int index, String field) {
-    // غیرفعال کردن فوکوس همه فیلدها
-    for (int i = 0; i < nameFocusNodes.length; i++) {
-      nameFocusNodes[i].unfocus();
-      gradeFocusNodes[i].unfocus();
-      unitFocusNodes[i].unfocus();
-    }
-
-    // فعال کردن فوکوس فیلد جدید
-    if (field == 'name') {
-      nameFocusNodes[index].requestFocus();
-    } else if (field == 'grade') {
-      gradeFocusNodes[index].requestFocus();
-    } else if (field == 'unit') {
-      unitFocusNodes[index].requestFocus();
-    }
-
-    setState(() {
-      focusedFieldIndex = index; // فیلدی که فوکوس دارد ذخیره می‌شود
+      if (hasEmptyField) {
+        errorMessage = "مقادیر مورد نیاز را وارد نکرده اید"; // نمایش پیغام خطا
+      } else {
+        gpa = totalUnits == 0 ? 0.0 : totalWeighted / totalUnits;
+        errorMessage =
+            "معدل: ${gpa.toStringAsFixed(2)}"; // نمایش معدل محاسبه‌شده
+      }
     });
   }
 
@@ -110,11 +100,12 @@ class _GPAHomePageState extends State<GPAHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2C2C2C),
+      backgroundColor: Color(0xFF464646),
       appBar: AppBar(
-          title: Text('محاسبه معدل'), backgroundColor: Color(0xFF1976D2)),
+          centerTitle: true,
+          title: Text('محاسبه معدل'),
+          backgroundColor: Colors.blue),
       body: GestureDetector(
-        // این بخش باعث می‌شود که اگر کاربر خارج از فیلدها کلیک کند، فوکوس از فیلدها برداشته شود
         onTap: () {
           FocusScope.of(context)
               .requestFocus(FocusNode()); // غیرفعال کردن فوکوس
@@ -157,94 +148,89 @@ class _GPAHomePageState extends State<GPAHomePage> {
                 child: ListView.builder(
                   itemCount: nameControllers.length,
                   itemBuilder: (context, index) {
-                    return Row(
-                      children: [
-                        // دکمه حذف برای هر ردیف
-                        Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blue),
-                            borderRadius: BorderRadius.circular(8.0),
-                            color: Colors.white,
-                          ),
-                          child: IconButton(
-                            icon: Icon(Icons.delete, color: Colors.red),
-                            onPressed: () {
-                              setState(() {
-                                nameControllers.removeAt(index);
-                                gradeControllers.removeAt(index);
-                                unitControllers.removeAt(index);
-                                nameFocusNodes.removeAt(index);
-                                gradeFocusNodes.removeAt(index);
-                                unitFocusNodes.removeAt(index);
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 10),
-                        // فیلد تعداد واحد با کیبورد عددی
-                        Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              setState(() {
-                                if (hasFocus) {
-                                  _setFocus(index,
-                                      'unit'); // فوکوس را روی واحد فعال می‌کنیم
-                                }
-                              });
-                            },
-                            child: TextField(
-                              controller: unitControllers[index],
-                              decoration: _customInputDecoration(
-                                  'تعداد واحد', unitFocusNodes[index]),
-                              keyboardType: TextInputType.number,
-                              focusNode: unitFocusNodes[index],
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.blue),
+                              borderRadius: BorderRadius.circular(8.0),
+                              color: Colors.white,
+                            ),
+                            child: IconButton(
+                              icon: Icon(Icons.delete, color: Colors.red),
+                              onPressed: () {
+                                setState(() {
+                                  nameControllers.removeAt(index);
+                                  gradeControllers.removeAt(index);
+                                  unitControllers.removeAt(index);
+                                  nameFocusNodes.removeAt(index);
+                                  gradeFocusNodes.removeAt(index);
+                                  unitFocusNodes.removeAt(index);
+                                });
+                              },
                             ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        // فیلد نمره با کیبورد عددی
-                        Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              setState(() {
-                                if (hasFocus) {
-                                  _setFocus(index,
-                                      'grade'); // فوکوس را روی نمره فعال می‌کنیم
-                                }
-                              });
-                            },
-                            child: TextField(
-                              controller: gradeControllers[index],
-                              decoration: _customInputDecoration(
-                                  'نمره', gradeFocusNodes[index]),
-                              keyboardType: TextInputType.number,
-                              focusNode: gradeFocusNodes[index],
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                setState(() {
+                                  if (hasFocus) {
+                                    _setFocus(index, 'unit');
+                                  }
+                                });
+                              },
+                              child: TextField(
+                                controller: unitControllers[index],
+                                decoration: _customInputDecoration(
+                                    'تعداد واحد', unitFocusNodes[index]),
+                                keyboardType: TextInputType.number,
+                                focusNode: unitFocusNodes[index],
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(width: 10),
-                        // فیلد نام درس با کیبورد پیش‌فرض
-                        Expanded(
-                          child: Focus(
-                            onFocusChange: (hasFocus) {
-                              setState(() {
-                                if (hasFocus) {
-                                  _setFocus(index,
-                                      'name'); // فوکوس را روی نام درس فعال می‌کنیم
-                                }
-                              });
-                            },
-                            child: TextField(
-                              controller: nameControllers[index],
-                              decoration: _customInputDecoration(
-                                  'نام درس', nameFocusNodes[index]),
-                              focusNode: nameFocusNodes[index],
-                              keyboardType:
-                                  TextInputType.text, // کیبورد پیش‌فرض
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                setState(() {
+                                  if (hasFocus) {
+                                    _setFocus(index, 'grade');
+                                  }
+                                });
+                              },
+                              child: TextField(
+                                controller: gradeControllers[index],
+                                decoration: _customInputDecoration(
+                                    'نمره', gradeFocusNodes[index]),
+                                keyboardType: TextInputType.number,
+                                focusNode: gradeFocusNodes[index],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          SizedBox(width: 10),
+                          Expanded(
+                            child: Focus(
+                              onFocusChange: (hasFocus) {
+                                setState(() {
+                                  if (hasFocus) {
+                                    _setFocus(index, 'name');
+                                  }
+                                });
+                              },
+                              child: TextField(
+                                controller: nameControllers[index],
+                                decoration: _customInputDecoration(
+                                    'نام درس', nameFocusNodes[index]),
+                                focusNode: nameFocusNodes[index],
+                                keyboardType: TextInputType.text,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
@@ -253,16 +239,20 @@ class _GPAHomePageState extends State<GPAHomePage> {
               ElevatedButton.icon(
                 onPressed: _addRow,
                 icon: Icon(Icons.add),
-                label: Text('افزودن ردیف'),
+                label: Text('افزودن ردیف', style: TextStyle(fontSize: 18.0)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.grey.shade200,
                   foregroundColor: Colors.black,
+                  minimumSize: Size(double.infinity, 50),
                 ),
               ),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _calculateGPA,
-                child: Text('محاسبه'),
+                child: Text(
+                  'محاسبه',
+                  style: TextStyle(fontSize: 18.0),
+                ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF1976D2),
                   foregroundColor: Colors.white,
@@ -270,17 +260,47 @@ class _GPAHomePageState extends State<GPAHomePage> {
                 ),
               ),
               SizedBox(height: 20),
-              Text(
-                'معدل کل: ${gpa.toStringAsFixed(2)}',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
+              Container(
+                padding: EdgeInsets.all(16.0),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(8.0),
+                  border: Border.all(color: Colors.blue),
+                ),
+                child: Center(
+                  child: Text(
+                    errorMessage,
+                    style: TextStyle(
+                        fontSize: 18,
+                        color: errorMessage.startsWith('مقادیر')
+                            ? Colors.red
+                            : Colors.blue),
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void _setFocus(int index, String field) {
+    // غیرفعال کردن فوکوس همه فیلدها
+    for (int i = 0; i < nameFocusNodes.length; i++) {
+      nameFocusNodes[i].unfocus();
+      gradeFocusNodes[i].unfocus();
+      unitFocusNodes[i].unfocus();
+    }
+    if (field == 'name') {
+      nameFocusNodes[index].requestFocus();
+    } else if (field == 'grade') {
+      gradeFocusNodes[index].requestFocus();
+    } else if (field == 'unit') {
+      unitFocusNodes[index].requestFocus();
+    }
+    setState(() {
+      focusedFieldIndex = index;
+    });
   }
 }
