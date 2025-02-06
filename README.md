@@ -15,7 +15,7 @@ This project is a simple application for calculating GPA using the Flutter frame
 3. Click the "Calculate" button to display your total GPA.
 
 ## Screenshots:
-![GPA Screenshot](assets/simple.png)
+![GPA Screenshot](assets/simple.jpg)
 
 ## Technologies:
 - Flutter
