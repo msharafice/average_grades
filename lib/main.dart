@@ -5,6 +5,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,6 +19,8 @@ class MyApp extends StatelessWidget {
 }
 
 class GPAHomePage extends StatefulWidget {
+  const GPAHomePage({super.key});
+
   @override
   _GPAHomePageState createState() => _GPAHomePageState();
 }
@@ -110,178 +114,180 @@ class _GPAHomePageState extends State<GPAHomePage> {
           FocusScope.of(context)
               .requestFocus(FocusNode()); // غیرفعال کردن فوکوس
         },
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                      child: Center(
-                          child: Text('حذف',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('واحد',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('نمره',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)))),
-                  Expanded(
-                      child: Center(
-                          child: Text('درس',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue)))),
-                ],
-              ),
-              SizedBox(height: 10),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: nameControllers.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.only(bottom: 8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.blue),
-                              borderRadius: BorderRadius.circular(8.0),
-                              color: Colors.white,
-                            ),
-                            child: IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () {
-                                setState(() {
-                                  nameControllers.removeAt(index);
-                                  gradeControllers.removeAt(index);
-                                  unitControllers.removeAt(index);
-                                  nameFocusNodes.removeAt(index);
-                                  gradeFocusNodes.removeAt(index);
-                                  unitFocusNodes.removeAt(index);
-                                });
-                              },
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                setState(() {
-                                  if (hasFocus) {
-                                    _setFocus(index, 'unit');
-                                  }
-                                });
-                              },
-                              child: TextField(
-                                controller: unitControllers[index],
-                                decoration: _customInputDecoration(
-                                    'تعداد واحد', unitFocusNodes[index]),
-                                keyboardType: TextInputType.number,
-                                focusNode: unitFocusNodes[index],
-                                textAlign: TextAlign.right,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                        child: Center(
+                            child: Text('حذف',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)))),
+                    Expanded(
+                        child: Center(
+                            child: Text('واحد',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)))),
+                    Expanded(
+                        child: Center(
+                            child: Text('نمره',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)))),
+                    Expanded(
+                        child: Center(
+                            child: Text('درس',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue)))),
+                  ],
+                ),
+                SizedBox(height: 10),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: nameControllers.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Colors.blue),
+                                borderRadius: BorderRadius.circular(8.0),
+                                color: Colors.white,
+                              ),
+                              child: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () {
+                                  setState(() {
+                                    nameControllers.removeAt(index);
+                                    gradeControllers.removeAt(index);
+                                    unitControllers.removeAt(index);
+                                    nameFocusNodes.removeAt(index);
+                                    gradeFocusNodes.removeAt(index);
+                                    unitFocusNodes.removeAt(index);
+                                  });
+                                },
                               ),
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                setState(() {
-                                  if (hasFocus) {
-                                    _setFocus(index, 'grade');
-                                  }
-                                });
-                              },
-                              child: TextField(
-                                controller: gradeControllers[index],
-                                decoration: _customInputDecoration(
-                                    'نمره', gradeFocusNodes[index]),
-                                keyboardType: TextInputType.number,
-                                focusNode: gradeFocusNodes[index],
-                                textAlign: TextAlign.right,
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Focus(
+                                onFocusChange: (hasFocus) {
+                                  setState(() {
+                                    if (hasFocus) {
+                                      _setFocus(index, 'unit');
+                                    }
+                                  });
+                                },
+                                child: TextField(
+                                  controller: unitControllers[index],
+                                  decoration: _customInputDecoration(
+                                      'تعداد واحد', unitFocusNodes[index]),
+                                  keyboardType: TextInputType.number,
+                                  focusNode: unitFocusNodes[index],
+                                  textAlign: TextAlign.right,
+                                ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 10),
-                          Expanded(
-                            child: Focus(
-                              onFocusChange: (hasFocus) {
-                                setState(() {
-                                  if (hasFocus) {
-                                    _setFocus(index, 'name');
-                                  }
-                                });
-                              },
-                              child: TextField(
-                                controller: nameControllers[index],
-                                decoration: _customInputDecoration(
-                                    'نام درس', nameFocusNodes[index]),
-                                focusNode: nameFocusNodes[index],
-                                keyboardType: TextInputType.text,
-                                textAlign: TextAlign.right,
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Focus(
+                                onFocusChange: (hasFocus) {
+                                  setState(() {
+                                    if (hasFocus) {
+                                      _setFocus(index, 'grade');
+                                    }
+                                  });
+                                },
+                                child: TextField(
+                                  controller: gradeControllers[index],
+                                  decoration: _customInputDecoration(
+                                      'نمره', gradeFocusNodes[index]),
+                                  keyboardType: TextInputType.number,
+                                  focusNode: gradeFocusNodes[index],
+                                  textAlign: TextAlign.right,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox(height: 10),
-              ElevatedButton.icon(
-                onPressed: _addRow,
-                icon: Icon(Icons.add),
-                label: Text('افزودن ردیف', style: TextStyle(fontSize: 18.0)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey.shade200,
-                  foregroundColor: Colors.black,
-                  minimumSize: Size(double.infinity, 50),
-                ),
-              ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _calculateGPA,
-                child: Text(
-                  'محاسبه',
-                  style: TextStyle(fontSize: 18.0),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF1976D2),
-                  foregroundColor: Colors.white,
-                  minimumSize: Size(double.infinity, 50),
-                ),
-              ),
-              SizedBox(height: 20),
-              Container(
-                padding: EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.0),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: Center(
-                  child: Text(
-                    errorMessage,
-                    style: TextStyle(
-                        fontSize: 18,
-                        color: errorMessage.startsWith('مقادیر')
-                            ? Colors.red
-                            : Colors.blue),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: Focus(
+                                onFocusChange: (hasFocus) {
+                                  setState(() {
+                                    if (hasFocus) {
+                                      _setFocus(index, 'name');
+                                    }
+                                  });
+                                },
+                                child: TextField(
+                                  controller: nameControllers[index],
+                                  decoration: _customInputDecoration(
+                                      'نام درس', nameFocusNodes[index]),
+                                  focusNode: nameFocusNodes[index],
+                                  keyboardType: TextInputType.text,
+                                  textAlign: TextAlign.right,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
-              ),
-            ],
+                SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: _addRow,
+                  icon: Icon(Icons.add),
+                  label: Text('افزودن ردیف', style: TextStyle(fontSize: 18.0)),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade200,
+                    foregroundColor: Colors.black,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: _calculateGPA,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF1976D2),
+                    foregroundColor: Colors.white,
+                    minimumSize: Size(double.infinity, 50),
+                  ),
+                  child: Text(
+                    'محاسبه',
+                    style: TextStyle(fontSize: 18.0),
+                  ),
+                ),
+                SizedBox(height: 20),
+                Container(
+                  padding: EdgeInsets.all(16.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8.0),
+                    border: Border.all(color: Colors.blue),
+                  ),
+                  child: Center(
+                    child: Text(
+                      errorMessage,
+                      style: TextStyle(
+                          fontSize: 18,
+                          color: errorMessage.startsWith('مقادیر')
+                              ? Colors.red
+                              : Colors.blue),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
