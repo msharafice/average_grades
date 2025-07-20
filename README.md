@@ -14,10 +14,11 @@ This project is a simple application for calculating GPA using the Flutter frame
 2. For each course, enter the course name, grade, and credit hours.
 3. Click the "Calculate" button to display your total GPA.
 
-## Screenshots:
-![GPA Screenshot](assets/simple.jpg)
-
 ## Technologies:
 - Flutter
 - Dart
 - Firebase (if needed for online storage)
+
+## Screenshots:
+![GPA Screenshot](assets/simple.jpg)
+
