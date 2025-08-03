@@ -1,4 +1,4 @@
-import 'package:average_grades/gpa.dart';
+import 'package:average_grade_test/gpa.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {

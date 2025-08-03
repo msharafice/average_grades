@@ -1,4 +1,4 @@
-import 'package:average_grades/home_page.dart';
+import 'package:average_grade_test/home_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
